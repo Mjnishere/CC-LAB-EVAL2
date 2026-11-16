@@ -3,7 +3,7 @@
 **Course:** Cloud Computing Lab (26ECAC301)  
 **Problem:** 18 — Basic RBAC with Service Accounts  
 **Environment:** Ubuntu + Visual Studio Code + Docker + Minikube + kubectl  
-**Implementation:** Native Kubernetes RBAC (OPA/Gatekeeper and a frontend are not required)
+**Implementation:**  Kubernetes RBAC 
 
 ## 1. What this project demonstrates
 
@@ -409,4 +409,4 @@ minikube delete
 - Minikube start guide: https://minikube.sigs.k8s.io/docs/start/
 - kubectl installation: https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
 - VS Code: https://code.visualstudio.com/
-# CC-LAB-EVAL2
+
