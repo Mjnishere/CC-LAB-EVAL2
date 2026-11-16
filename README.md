@@ -47,11 +47,23 @@ basic-rbac-vscode/
 │   ├── verify.sh
 │   └── cleanup.sh
 ├── screenshots/
-│   └── (save your actual evaluation screenshots here)
-└── README.md
+│   ├── 01-rbac-demo-setup.png
+│   └── 02-rbac-resources-validation.png
+├── README.md
+└── .gitignore
 ```
 
-## 4. Concepts and architecture
+## 4. Screenshots
+
+### 01 — RBAC Demo Setup
+
+![01 - RBAC Demo Setup](screenshots/01-rbac-demo-setup.png)
+
+### 02 — RBAC Resources and Validation
+
+![02 - RBAC Resources and Validation](screenshots/02-rbac-resources-validation.png)
+
+## 5. Concepts and architecture
 
 ### Namespace
 A namespace groups and scopes Kubernetes resources. This project uses `rbac-demo`.
@@ -87,7 +99,7 @@ Kubernetes API Server authorization check
 
 Authentication answers **who is making the request?** Authorization answers **what is that identity allowed to do?** The ServiceAccount supplies the workload identity; RBAC defines and assigns permissions.
 
-## 5. Prerequisites on Ubuntu
+## 6. Prerequisites on Ubuntu
 
 You need:
 
@@ -173,7 +185,7 @@ Recommended extensions (optional but useful):
 
 The project works without these extensions; the integrated terminal and YAML files are sufficient.
 
-## 6. Open the project in VS Code
+## 7. Open the project in VS Code
 
 1. Download and extract the ZIP.
 2. Open a terminal in the extracted folder.
@@ -189,7 +201,7 @@ Open the integrated terminal using **Terminal → New Terminal** or `Ctrl+Shift+
 
 All commands below can be run in this integrated terminal.
 
-## 7. Start the local Kubernetes cluster
+## 8. Start the local Kubernetes cluster
 
 Start Minikube with Docker:
 
@@ -207,7 +219,7 @@ kubectl get pods -A
 
 The Minikube node should show `Ready`. If Minikube is already running, `minikube start` will reuse the existing cluster.
 
-## 8. Apply the RBAC manifests
+## 9. Apply the RBAC manifests
 
 From the project root, run:
 
@@ -239,7 +251,7 @@ kubectl describe role pod-reader-role -n rbac-demo
 kubectl describe rolebinding pod-reader-binding -n rbac-demo
 ```
 
-## 9. Verify allowed and ungranted operations
+## 10. Verify allowed and ungranted operations
 
 The `--as` option asks the API Server to evaluate the request as the named ServiceAccount. The account running `kubectl` must have permission to impersonate that ServiceAccount. Minikube's usual administrator context permits this; if you get an impersonation error, inspect the current context and permissions.
 
@@ -290,7 +302,7 @@ kubectl delete pod rbac-test-pod -n rbac-demo --as=system:serviceaccount:rbac-de
 
 Do not run the delete command without `--as` if you intend to preserve the test Pod: your normal administrator identity may be allowed to delete it.
 
-## 10. What each command does
+## 11. What each command does
 
 | Command | Explanation |
 |---|---|
@@ -305,7 +317,7 @@ Do not run the delete command without `--as` if you intend to preserve the test 
 | `-n rbac-demo` | Sets the namespace for the command. |
 | `kubectl wait ...` | Waits until the specified Pod condition is met. |
 
-## 11. Troubleshooting
+## 12. Troubleshooting
 
 ### `minikube start` fails
 Check Docker:
@@ -349,7 +361,7 @@ The exact authorization required may depend on cluster configuration. Do not gra
 ### A denied check unexpectedly returns `yes`
 Kubernetes RBAC permissions are additive. Another RoleBinding or ClusterRoleBinding may grant the permission. Inspect applicable bindings and remember that this project Role does not revoke permissions granted elsewhere.
 
-## 12. Screenshots to capture for evaluation
+## 13. Screenshots to capture for evaluation
 
 Save actual screenshots in the `screenshots/` folder:
 
@@ -364,7 +376,7 @@ Save actual screenshots in the `screenshots/` folder:
 
 Use real output from your own cluster. The expected responses in this README are not evidence that the commands have already been executed.
 
-## 13. Cleanup
+## 14. Cleanup
 
 To remove only the resources created by this project:
 
@@ -386,7 +398,7 @@ To delete the Minikube cluster entirely:
 minikube delete
 ```
 
-## 14. Key viva points
+## 15. Key viva points
 
 - **RBAC:** Role-Based Access Control; Kubernetes authorization mechanism.
 - **ServiceAccount:** identity for a workload or process.
@@ -402,7 +414,7 @@ minikube delete
 - **OPA:** an additional policy engine; it is not required for this native RBAC assignment.
 - **Frontend:** not required. YAML manifests and terminal verification are the deliverable.
 
-## 15. References
+## 16. References
 
 - Kubernetes RBAC: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
 - Kubernetes ServiceAccounts: https://kubernetes.io/docs/concepts/security/service-accounts/
