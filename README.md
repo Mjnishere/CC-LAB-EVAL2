@@ -1,23 +1,32 @@
-# Basic RBAC with Service Accounts — Cloud Computing Lab Evaluation 2
+# Basic RBAC with Service Accounts
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Kubernetes-RBAC-326ce5?style=for-the-badge&logo=kubernetes" alt="Kubernetes RBAC" />
+  <img src="https://img.shields.io/badge/Ubuntu-22.04%2B-E95420?style=for-the-badge&logo=ubuntu" alt="Ubuntu" />
+  <img src="https://img.shields.io/badge/Minikube-Local%20Cluster-00C7B7?style=for-the-badge&logo=docker" alt="Minikube" />
+</p>
+
+## Lab Evaluation 2
 
 **Course:** Cloud Computing Lab (26ECAC301)  
 **Problem:** 18 — Basic RBAC with Service Accounts  
-**Environment:** Ubuntu + Visual Studio Code + Docker + Minikube + kubectl  
+**Environment:** Ubuntu + VS Code + Docker + Minikube + kubectl  
 **Implementation:** Kubernetes RBAC
 
-## 1. Overview
+---
 
-This project demonstrates Kubernetes Role-Based Access Control (RBAC) using a namespace-scoped Role and RoleBinding. A ServiceAccount named `pod-reader` is created in the `rbac-demo` namespace and is granted only the permissions needed to read Pods.
+## 1. Objective
 
-The Role allows:
+This project demonstrates how Kubernetes Role-Based Access Control (RBAC) restricts access to resources using a namespace-scoped `Role` and `RoleBinding`.
 
-- `get` on Pods
-- `list` on Pods
-- `watch` on Pods
+A `ServiceAccount` named `pod-reader` is created in the `rbac-demo` namespace and is granted only the permissions necessary to read Pods. The project verifies the difference between:
 
-The ServiceAccount is then checked using `kubectl auth can-i` to verify which operations are allowed and which are denied.
+- allowed actions (`get`, `list`, `watch`)
+- denied actions (`create`, `update`, `delete`, `list secrets`)
 
-This follows the principle of least privilege: the ServiceAccount receives only the permissions required for its task.
+This follows the principle of least privilege and helps explain the core idea of authorization in Kubernetes.
+
+---
 
 ## 2. Team
 
@@ -27,6 +36,8 @@ This follows the principle of least privilege: the ServiceAccount receives only 
 | Kartik | 01FE24BCI072 |
 | Manoj | 01FE24BCI077 |
 | Vinayak | ____________________ |
+
+---
 
 ## 3. Project Structure
 
@@ -43,47 +54,53 @@ basic-rbac-vscode/
 │   ├── verify.sh
 │   └── cleanup.sh
 ├── screenshots/
-│   ├── 01-rbac-demo-setup.png
-│   └── 02-rbac-resources-validation.png
+│   ├── Screenshot from 2026-11-17 00-01-05.png
+│   └── Screenshot from 2026-11-17 00-01-14.png
 ├── README.md
 ├── .gitignore
 └── .vscode/
 ```
 
-## 4. Screenshots
+---
 
-### Screenshot 1 — RBAC setup and resource creation
+## 4. Key RBAC Concepts
+
+### Namespace
+A namespace provides a logical scope for resources. In this project, the namespace is `rbac-demo`.
+
+### ServiceAccount
+A `ServiceAccount` represents an identity for workloads running inside the cluster. Here it is used as `pod-reader`.
+
+### Role
+A `Role` grants permissions within a single namespace. This Role allows read-only Pod access.
+
+### RoleBinding
+A `RoleBinding` associates the ServiceAccount with the Role, granting access only within the chosen namespace.
+
+---
+
+## 5. Screenshots
+
+### Screenshot 1 — RBAC Setup and Resource Creation
 
 ![Screenshot 1 — RBAC setup and resource creation](screenshots/Screenshot%20from%202026-11-17%2000-01-05.png)
 
-### Screenshot 2 — RBAC validation output
+### Screenshot 2 — RBAC Validation Output
 
 ![Screenshot 2 — RBAC validation output](screenshots/Screenshot%20from%202026-11-17%2000-01-14.png)
 
-## 5. RBAC Concepts
-
-### Namespace
-A Kubernetes namespace isolates resources within a logical boundary. This project uses `rbac-demo`.
-
-### ServiceAccount
-A ServiceAccount provides an identity for workloads or applications running inside Kubernetes. In this project, it is named `pod-reader`.
-
-### Role
-A Role defines permissions within a specific namespace. Here it grants access to `pods` for `get`, `list`, and `watch` operations.
-
-### RoleBinding
-A RoleBinding links the ServiceAccount to the Role, allowing the ServiceAccount to use the granted permissions only inside the namespace.
+---
 
 ## 6. Prerequisites
 
-Install the following on Ubuntu:
+Install the required tools on Ubuntu:
 
 - Docker
 - Minikube
 - `kubectl`
 - Visual Studio Code
 
-Check the tools:
+Verify installation:
 
 ```bash
 docker --version
@@ -92,22 +109,26 @@ minikube version
 code --version
 ```
 
-## 7. Start Minikube
+---
+
+## 7. Start the Cluster
 
 ```bash
 minikube start --driver=docker
 ```
 
-Verify the cluster:
+Check the cluster state:
 
 ```bash
 kubectl get nodes
 kubectl get pods -A
 ```
 
+---
+
 ## 8. Apply the RBAC Manifests
 
-From the project root:
+From the project root, run:
 
 ```bash
 kubectl apply -f manifests/01-namespace.yaml
@@ -117,27 +138,29 @@ kubectl apply -f manifests/04-rolebinding.yaml
 kubectl apply -f manifests/05-test-pod.yaml
 ```
 
-Or use the helper script:
+Or use the script:
 
 ```bash
 bash scripts/apply.sh
 ```
 
-Wait until the Pod is Ready:
+Wait for the Pod to become Ready:
 
 ```bash
 kubectl wait --for=condition=Ready pod/rbac-test-pod -n rbac-demo --timeout=120s
 ```
 
-Inspect the created resources:
+Inspect created resources:
 
 ```bash
 kubectl get serviceaccounts,roles,rolebindings,pods -n rbac-demo
 ```
 
-## 9. Verify Authorization
+---
 
-The following checks should return `yes` because they are permitted by the Role:
+## 9. Authorization Checks
+
+Allowed operations:
 
 ```bash
 kubectl auth can-i get pods --as=system:serviceaccount:rbac-demo:pod-reader -n rbac-demo
@@ -145,7 +168,7 @@ kubectl auth can-i list pods --as=system:serviceaccount:rbac-demo:pod-reader -n 
 kubectl auth can-i watch pods --as=system:serviceaccount:rbac-demo:pod-reader -n rbac-demo
 ```
 
-The following checks should return `no` because they are not granted by the Role:
+Denied operations:
 
 ```bash
 kubectl auth can-i create pods --as=system:serviceaccount:rbac-demo:pod-reader -n rbac-demo
@@ -162,31 +185,35 @@ kubectl auth can-i list pods --as=system:serviceaccount:rbac-demo:pod-reader -n 
 
 Expected result: `no`.
 
+---
+
 ## 10. Cleanup
 
-To delete the resources created by this lab:
+Delete the project resources:
 
 ```bash
 bash scripts/cleanup.sh
 ```
 
-This removes the `rbac-demo` namespace and its resources.
-
-To stop the cluster:
+Stop the Minikube cluster:
 
 ```bash
 minikube stop
 ```
 
-To delete the cluster entirely:
+Delete the cluster completely:
 
 ```bash
 minikube delete
 ```
 
+---
+
 ## 11. Conclusion
 
-This project demonstrates how RBAC restricts what an identity is allowed to do. By assigning only the minimum required permissions, Kubernetes enforces least-privilege access and improves security for workloads and applications.
+This project shows that RBAC enforces least-privilege access by granting only the minimum permissions needed for a workload. The ServiceAccount can read Pods in its namespace but cannot perform unauthorized operations beyond the defined Role.
+
+---
 
 ## 12. References
 
