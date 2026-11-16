@@ -1,4 +1,4 @@
-# Basic RBAC with Service Accounts — Kubernetes Lab Evaluation 2
+# Basic RBAC with Service Accounts — Cloud Computing Lab Evaluation 2
 
 **Course:** Cloud Computing Lab (26ECAC301)  
 **Problem:** 18 — Basic RBAC with Service Accounts  
