@@ -52,13 +52,13 @@ basic-rbac-vscode/
 
 ## 4. Screenshots
 
-### 01 — RBAC Demo Setup
+### Screenshot 1 — RBAC setup and resource creation
 
-![01 - RBAC Demo Setup](screenshots/01-rbac-demo-setup.png)
+![Screenshot 1 — RBAC setup and resource creation](screenshots/Screenshot%20from%202026-11-17%2000-01-05.png)
 
-### 02 — RBAC Resources and Validation
+### Screenshot 2 — RBAC validation output
 
-![02 - RBAC Resources and Validation](screenshots/02-rbac-resources-validation.png)
+![Screenshot 2 — RBAC validation output](screenshots/Screenshot%20from%202026-11-17%2000-01-14.png)
 
 ## 5. RBAC Concepts
 
