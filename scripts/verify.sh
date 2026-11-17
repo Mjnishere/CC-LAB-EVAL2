@@ -10,10 +10,10 @@ echo
 echo "=== Expected NOT-GRANTED checks (no, unless other bindings grant them) ==="
 for verb in create update delete; do
   printf "%-8s pods: " "$verb"
-  kubectl auth can-i "$verb" pods --as="$SA" -n rbac-demo
+  kubectl auth can-i "$verb" pods --as="$SA" -n rbac-demo || true
 done
 printf "%-8s secrets: " "list"
-kubectl auth can-i list secrets --as="$SA" -n rbac-demo
+kubectl auth can-i list secrets --as="$SA" -n rbac-demo || true
 echo
 echo "=== Namespace-scope check (expected no, unless other bindings grant it) ==="
-kubectl auth can-i list pods --as="$SA" -n default
+kubectl auth can-i list pods --as="$SA" -n default || true
